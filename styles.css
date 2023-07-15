@@ -1,0 +1,119 @@
+@import url(general.css);
+
+/* Game board design */
+.board {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+}
+
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+
+  height: 10rem;
+  border: 0.1rem solid #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Outer border cuts */
+.cell:first-child,
+.cell:nth-child(2),
+.cell:nth-child(3) {
+  border-top: none;
+}
+
+.cell:nth-child(3n + 1) {
+  border-left: none;
+}
+
+.cell:nth-child(3n) {
+  border-right: none;
+}
+
+.cell:last-child,
+.cell:nth-child(7),
+.cell:nth-child(8) {
+  border-bottom: none;
+}
+
+/* Displaying X */
+
+.cell.x::before,
+.cell.x::after {
+  content: "";
+  position: absolute;
+  width: calc(var(--mark-size) * 0.15);
+  height: var(--mark-size);
+  background-color: #222;
+}
+
+.cell.x::before {
+  transform: rotate(45deg);
+}
+
+.cell.x::after {
+  transform: rotate(135deg);
+}
+
+/* Displaying O */
+.cell.circle::before,
+.cell.circle::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+}
+
+.cell.circle::before {
+  width: var(--mark-size);
+  height: var(--mark-size);
+  background-color: #222;
+}
+
+.cell.circle::after {
+  width: calc(var(--mark-size) * 0.7);
+  height: calc(var(--mark-size) * 0.7);
+  background-color: #fff;
+}
+
+/* styling restart */
+.winningMessage {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 7rem;
+}
+
+.winningMessage button {
+  font-size: 5rem;
+  background-color: #fff;
+  border: 0.1rem solid black;
+  padding: 1rem 2rem;
+  cursor: pointer;
+}
+
+.winningMessage button:hover {
+  background-color: #000;
+  color: white;
+  border-color: white;
+}
+
+.winningMessage.show {
+  display: flex;
+}
