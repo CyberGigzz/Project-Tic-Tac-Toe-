@@ -10,9 +10,35 @@ class TicTacToe {
     this.restartButton = document.getElementById("restartButton");
     this.cells.forEach((cell, index) => {
       cell.addEventListener("click", () => this.handleMove(index));
-      
     });
     this.restartButton.addEventListener("click", () => this.restartGame());
+
+    // AI
+    this.gameplayChoice = document.querySelector(".gameplay-choice");
+    this.gameplayIcon = document.getElementById("gameplayIcon");
+    this.gameplayText = document.getElementById("gameplayText");
+    this.isAI = false;
+
+    this.gameplayIcon.addEventListener("click", () =>
+      this.toggleGameplayMode()
+    );
+  }
+
+  toggleGameplayMode() {
+    this.isAI = !this.isAI;
+    if (this.isAI) {
+      this.gameplayIcon.src = "img/people.png";
+      this.gameplayText.innerText = "2P";
+    } else {
+      this.gameplayIcon.src = "img/person.png";
+      this.gameplayText.innerText = "1P";
+    }
+    this.restartGame();
+    console.log("AI is:" + this.isAI);
+
+    if (this.isAI && this.currentPlayer === "O") {
+      this.makeAIMove(); // If AI mode is enabled and it's O's turn, make AI move immediately
+    }
   }
 
   handleMove(index) {
@@ -28,7 +54,40 @@ class TicTacToe {
       }
       console.log(this.currentPlayer);
 
-      this.currentPlayer = this.currentPlayer === "X" ? "O" : "X";
+      if (!this.isAI) {
+        this.currentPlayer = this.currentPlayer === "X" ? "O" : "X";
+      } else if (this.currentPlayer === "X") {
+        this.makeAIMove(); // If AI mode is enabled and it's X's turn, make AI move
+      }
+      console.log(this.board);
+
+      //   this.currentPlayer = this.currentPlayer === "X" ? "O" : "X";
+    }
+  }
+
+  makeAIMove() {
+    const availableMoves = [];
+    for (let i = 0; i < this.board.length; i++) {
+      if (this.board[i] === "") {
+        availableMoves.push(i);
+      }
+    }
+
+    console.log(availableMoves);
+
+    if (availableMoves.length > 0) {
+      const randomIndex = Math.floor(Math.random() * availableMoves.length);
+      const moveIndex = availableMoves[randomIndex];
+      this.board[moveIndex] = "O";
+      this.renderBoard();
+      if (this.checkWin("O")) {
+        console.log("O wins!");
+        this.showWinningMessage("O wins!");
+      } else if (this.checkDraw()) {
+        console.log("It's a draw!");
+        this.showWinningMessage("It's a draw!");
+      }
+      this.currentPlayer = "X";
     }
   }
 

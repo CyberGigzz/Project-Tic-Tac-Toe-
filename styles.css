@@ -2,26 +2,52 @@
 
 /* Game board design */
 .board {
-  width: 100vw;
-  height: 100vh;
+  /* position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%); */
+
   display: grid;
   grid-template-columns: repeat(3, auto);
   justify-content: center;
   align-content: center;
   justify-items: center;
   align-items: center;
+
+  margin-top: 1rem;
 }
 
 .cell {
   width: var(--cell-size);
   height: var(--cell-size);
 
-  height: 10rem;
-  border: 0.1rem solid #000;
+  border: 0.1rem solid #111;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+
+/* icon of gameplay */
+.gameplay-choice {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 8rem;
+  cursor: pointer;
+  
+}
+
+.icon-img {
+  width: 4rem;
+  height: 4rem;
+}
+
+.icon-text {
+  font-size: 1.8rem;
+  color: #000;
 }
 
 /* Outer border cuts */
