@@ -27,10 +27,10 @@ class TicTacToe {
   toggleGameplayMode() {
     this.isAI = !this.isAI;
     if (this.isAI) {
-      this.gameplayIcon.src = "img/people.png";
+      this.gameplayIcon.src = "./img/people.png";
       this.gameplayText.innerText = "2P";
     } else {
-      this.gameplayIcon.src = "img/person.png";
+      this.gameplayIcon.src = "./img/person.png";
       this.gameplayText.innerText = "1P";
     }
     this.restartGame();
