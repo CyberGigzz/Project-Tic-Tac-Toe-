@@ -8,6 +8,7 @@ class TicTacToe {
     this.winningMessage = document.querySelector(".winningMessage");
     this.winningMessageText = document.querySelector("[data-winning-message]");
     this.restartButton = document.getElementById("restartButton");
+
     this.cells.forEach((cell, index) => {
       cell.addEventListener("click", () => this.handleMove(index));
     });
@@ -34,11 +35,10 @@ class TicTacToe {
       this.gameplayText.innerText = "1P";
     }
     this.restartGame();
-    console.log("AI is:" + this.isAI);
 
-    if (this.isAI && this.currentPlayer === "O") {
-      this.makeAIMove(); // If AI mode is enabled and it's O's turn, make AI move immediately
-    }
+    // if (this.isAI && this.currentPlayer === "O") {
+    //   this.makeAIMove(); // If AI mode is enabled and it's O's turn, make AI move immediately
+    // }
   }
 
   handleMove(index) {
@@ -46,10 +46,8 @@ class TicTacToe {
       this.board[index] = this.currentPlayer;
       this.renderBoard();
       if (this.checkWin(this.currentPlayer)) {
-        console.log(`${this.currentPlayer} wins!`);
         this.showWinningMessage(`${this.currentPlayer} wins!`);
       } else if (this.checkDraw()) {
-        console.log("It's a draw!");
         this.showWinningMessage("It's a draw!");
       }
       console.log(this.currentPlayer);
@@ -60,10 +58,32 @@ class TicTacToe {
         this.makeAIMove(); // If AI mode is enabled and it's X's turn, make AI move
       }
       console.log(this.board);
-
-      //   this.currentPlayer = this.currentPlayer === "X" ? "O" : "X";
     }
   }
+
+  //   makeAIMove() {
+  //     const availableMoves = [];
+  //     for (let i = 0; i < this.board.length; i++) {
+  //       if (this.board[i] === "") {
+  //         availableMoves.push(i);
+  //       }
+  //     }
+
+  //     console.log(availableMoves);
+
+  //     if (availableMoves.length > 0) {
+  //       const randomIndex = Math.floor(Math.random() * availableMoves.length);
+  //       const moveIndex = availableMoves[randomIndex];
+  //       console.log(moveIndex);
+  //       this.board[moveIndex] = "O";
+  //       this.renderBoard();
+  //       if (this.checkWin("O")) {
+  //         this.showWinningMessage("O wins!");
+  //       } else if (this.checkDraw()) {
+  //         this.showWinningMessage("It's a draw!");
+  //       }
+  //     }
+  //   }
 
   makeAIMove() {
     const availableMoves = [];
@@ -73,22 +93,70 @@ class TicTacToe {
       }
     }
 
-    console.log(availableMoves);
-
     if (availableMoves.length > 0) {
-      const randomIndex = Math.floor(Math.random() * availableMoves.length);
-      const moveIndex = availableMoves[randomIndex];
-      this.board[moveIndex] = "O";
+      const bestMove = this.minimax(this.board, "O");
+      this.board[bestMove.index] = "O";
       this.renderBoard();
+
       if (this.checkWin("O")) {
-        console.log("O wins!");
         this.showWinningMessage("O wins!");
       } else if (this.checkDraw()) {
-        console.log("It's a draw!");
         this.showWinningMessage("It's a draw!");
       }
+
       this.currentPlayer = "X";
     }
+  }
+
+  minimax(board, player) {
+    if (this.checkWin("X")) {
+      return { score: -10 };
+    } else if (this.checkWin("O")) {
+      return { score: 10 };
+    } else if (this.checkDraw()) {
+      return { score: 0 };
+    }
+
+    const moves = [];
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] === "") {
+        const move = {};
+        move.index = i;
+        board[i] = player;
+
+        if (player === "O") {
+          const result = this.minimax(board, "X");
+          move.score = result.score;
+        } else {
+          const result = this.minimax(board, "O");
+          move.score = result.score;
+        }
+
+        board[i] = "";
+        moves.push(move);
+      }
+    }
+
+    let bestMove;
+    if (player === "O") {
+      let bestScore = -Infinity;
+      for (let i = 0; i < moves.length; i++) {
+        if (moves[i].score > bestScore) {
+          bestScore = moves[i].score;
+          bestMove = moves[i];
+        }
+      }
+    } else {
+      let bestScore = Infinity;
+      for (let i = 0; i < moves.length; i++) {
+        if (moves[i].score < bestScore) {
+          bestScore = moves[i].score;
+          bestMove = moves[i];
+        }
+      }
+    }
+
+    return bestMove;
   }
 
   checkWin(player) {
@@ -109,13 +177,21 @@ class TicTacToe {
 
   renderBoard() {
     this.cells.forEach((cell, index) => {
-      cell.classList.remove("x", "circle");
+      cell.classList.remove("x", "circle", "animate");
       if (this.board[index] === "X") {
         cell.classList.add("x");
       } else if (this.board[index] === "O") {
         cell.classList.add("circle");
       }
     });
+
+    setTimeout(() => {
+      this.cells.forEach((cell) => {
+        if (cell.classList.contains("x") || cell.classList.contains("circle")) {
+          cell.classList.add("animate");
+        }
+      });
+    }, 10);
   }
 
   showWinningMessage(message) {
