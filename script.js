@@ -103,8 +103,6 @@ class TicTacToe {
       } else if (this.checkDraw()) {
         this.showWinningMessage("It's a draw!");
       }
-
-      this.currentPlayer = "X";
     }
   }
 
